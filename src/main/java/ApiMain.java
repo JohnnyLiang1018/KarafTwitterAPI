@@ -7,15 +7,15 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.Base64;
-
 import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServlet;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.json.*;
 
 
-public class ApiMain {
+public class ApiMain extends HttpServlet{
 	private static URL url;
 	private static HttpsURLConnection connection;
 	private String consumer_key = "NMqaca1bzXsOcZhP2XlwA";
@@ -102,7 +102,8 @@ public class ApiMain {
 				// a demonstration of processing json data, should be inside a feature function
 				JSONArray array = json.getJSONArray("statuses"); // there are multiple tweets under statuses tab
 				for(int i=0;i<array.length();i++) { // loop through all the tweets, print the text string if available
-					System.out.println(array.getJSONObject(i).optString("text"));
+					System.out.println(array.getJSONObject(i).optString("text")+"\n");
+					
 				}
 				return json;
 			}
