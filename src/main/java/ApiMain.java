@@ -8,36 +8,49 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.Base64;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.json.*;
 
 
 public class ApiMain {
-	private URL url;
-	HttpURLConnection connection;
+	private static URL url;
+	private static HttpsURLConnection connection;
 	private String consumer_key = "NMqaca1bzXsOcZhP2XlwA";
 	private String consumer_secret = "VxNQiRLwwKVD0K9mmfxlTTbVdgRpriORypnUbHhxeQw";
+	private static String bearer_key;
 	
 	public ApiMain() {
-		try {
-			// initialize HttpURLConnection
-			url = new URL("https://api.twitter.com/oauth2/token");
-			connection = (HttpURLConnection) url.openConnection();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 	// Main method
 	public static void main(String []args) {
-		ApiMain am = new ApiMain();
-		am.application_only_auth();
+		ApiMain api = new ApiMain();
+		api.application_only_auth();
+		apiSearch("league%20of%20legends","popular");
+	}
+	
+	public static void makeConnection(String urlString) {
+		try {
+			url = new URL(urlString);
+			connection = (HttpsURLConnection) url.openConnection();
+		
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	// 
 	public void application_only_auth() {
 		try {
+			makeConnection("https://api.twitter.com/oauth2/token");
 			String consumer_key_encode = URLEncoder.encode(consumer_key, "UTF-8");
 			String consumer_secret_encode = URLEncoder.encode(consumer_secret, "UTF-8");
 			String encode_key = consumer_key_encode + ":" + consumer_secret_encode;
@@ -54,6 +67,14 @@ public class ApiMain {
 			connection.connect();
 			System.out.println(connection.getResponseMessage());
 			System.out.println(connection.getResponseCode());
+			if(connection.getResponseMessage().equals("OK")) {
+				JSONObject json = inputStreamToJSON();
+				bearer_key = json.getString("access_token");
+				System.out.println(json.getString("token_type"));
+				System.out.println(json.getString("access_token"));
+				
+				
+			}
 		} catch (ProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,10 +84,53 @@ public class ApiMain {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} 
+	}
+	public static JSONObject apiSearch(String keywords, String result_type) { // there are more parameters available, for now just two
+		try {
+			makeConnection("https://api.twitter.com/1.1/search/tweets.json?q=" + keywords + "&" + "result_type=" + result_type); 
+			System.out.println(connection.getURL().toString());
+			connection.setRequestMethod("GET");
+			String bearer = "Bearer" + " " + bearer_key;
+			System.out.println(bearer);
+			connection.setRequestProperty("Authorization",bearer);
+			connection.connect();
+			if(connection.getResponseMessage().equals("OK")) {
+				
+				JSONObject json = inputStreamToJSON();
+				
+				// a demonstration of processing json data, should be inside a feature function
+				JSONArray array = json.getJSONArray("statuses"); // there are multiple tweets under statuses tab
+				for(int i=0;i<array.length();i++) { // loop through all the tweets, print the text string if available
+					System.out.println(array.getJSONObject(i).optString("text"));
+				}
+				return json;
+			}
+			
+		} catch (ProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+		return null; 
+
 	}
 	
+	public static JSONObject inputStreamToJSON() throws IOException {
+		InputStream is = connection.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String line;
+		StringBuffer jsonLines = new StringBuffer();
+		while ((line = br.readLine()) != null) {
+			jsonLines.append(line);
+		}
+		br.close();
+		JSONObject output = new JSONObject(jsonLines.toString());
+		
+		return output;
+	}
 	
 	public void HttpGET() {
 		try {
