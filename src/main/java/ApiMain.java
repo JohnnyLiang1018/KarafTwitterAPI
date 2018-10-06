@@ -9,9 +9,6 @@ import java.net.*;
 import java.util.Base64;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServlet;
-
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.json.*;
 
 
@@ -119,6 +116,41 @@ public class ApiMain extends HttpServlet{
 
 	}
 	
+	public static String apiGetFollower() {
+		
+		
+		return null;
+	}
+	
+	public static String apiGetTrends() {
+		
+		
+		return null;
+	}
+	
+	public static String apiGetGeo() {
+		
+		return null;
+	}
+	
+	public static String apiGetUsers() {
+		
+		return null;
+	}
+	
+	public static String apiGetUserTimeline() {
+		
+		return null;
+	}
+	
+	public static String apiStatusesRetweets() {
+		
+		return null;
+	}
+	
+	
+	
+	
 	public static JSONObject inputStreamToJSON() throws IOException {
 		InputStream is = connection.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -133,38 +165,6 @@ public class ApiMain extends HttpServlet{
 		return output;
 	}
 	
-	public void HttpGET() {
-		try {
-			connection.setRequestMethod("GET");
-			//Add some properties//
-			connection.connect();
-			if(connection.getResponseMessage().equals("OK")) {
-				InputStream is = connection.getInputStream();
-				BufferedReader br = new BufferedReader(new InputStreamReader(is));
-				String line;
-				StringBuffer jsonLines = new StringBuffer();
-				while ((line = br.readLine()) != null) {
-					jsonLines.append(line);
-				}
-				br.close();
-				JSONParser parser = new JSONParser();
-				Object obj = parser.parse(jsonLines.toString());
-				JSONObject json = new JSONObject(jsonLines.toString());
-				
-			}
-			
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	
 }
