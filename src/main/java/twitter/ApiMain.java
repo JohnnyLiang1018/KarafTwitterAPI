@@ -116,7 +116,7 @@ public class ApiMain extends HttpServlet{
 		return null; 
 
 	}
-	
+
 	public static String apiGetFollower(String name) {
 		try {
 			makeConnection("https://api.twitter.com/1.1/followers/ids.json?screen_name=" + name);
@@ -169,10 +169,38 @@ public class ApiMain extends HttpServlet{
 		
 		return null;
 	}
-	
-	public static String apiGetUserTimeline() {
-		
-		return null;
+
+
+	/**
+	 * author Aye 
+	 * @param name
+	 * @return
+	 */
+	public String apiGetUserTimeline(String name, String number) {
+		String output = "";
+		try {
+			makeConnection("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + name+ "&count=" + number);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Authorization", "Bearer" + " " + bearer_key);
+			connection.connect();
+			if(connection.getResponseMessage().equals("OK")) {
+				JSONObject json = inputStreamToJSON();
+				JSONArray array = new JSONArray(json);
+				for(int i = 0; i<array.length(); i++) {
+					JSONObject dataObj = (JSONObject) array.get(i);
+					//output = dataObj.getString("text");
+					output = output + dataObj.toString();
+				}
+			}
+			else {
+				output = output + "Cannot connect to api";
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		return output;
 	}
 	
 	public static String apiStatusesRetweets() {
@@ -192,6 +220,7 @@ public class ApiMain extends HttpServlet{
 		StringBuffer jsonLines = new StringBuffer();
 		while ((line = br.readLine()) != null) {
 			jsonLines.append(line);
+			System.out.println(line);
 		}
 		br.close();
 		JSONObject output = new JSONObject(jsonLines.toString());
