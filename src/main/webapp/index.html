@@ -1,0 +1,117 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	<title>Avengers Twitter API</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+	* {
+		box-sizing: border-box;
+	}
+	
+	body {
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	
+	header {
+		background-color: #777;
+		padding: 10px;
+		text-align: center;
+		font-size: 35px;
+		color: white;
+	}
+	
+	nav {
+		float: left;
+		width: 30%;
+		height: 300px; /* only for demonstration, should be removed */
+		background: #8B0000;
+		padding: 20px;
+	}
+	
+	nav ul {
+		list-style-type: none;
+		padding: 0;
+	}
+	
+	nav a {
+		color: white
+	}
+	
+	article {
+		float: left;
+		padding: 20px;
+		width: 70%;
+		background-color: #808080;
+		height: 300px; /* only for demonstration, should be removed */
+	}
+	
+	section:after {
+		content: "";
+		display: table;
+		clear: both;
+		color: white;
+	}
+	
+	footer {
+		background-color: #777;
+		padding: 10px;
+		text-align: center;
+		color: white;
+	}
+	
+	@media ( max-width : 600px) {
+		nav, article {
+			width: 100%;
+			height: auto;
+		}
+	}
+	</style>
+	</head>
+	<body>
+		<h1 style="background-color: #808080;">Team Avengers Twitter
+			Application</h1>
+		<header>
+			<h2>Avengers</h2>
+		</header>
+	
+		<section>
+			<nav>
+				<ul>
+					<li style="color: white;"><a href="Search.jsp"
+						target="displayFrame"> Search </a></li>
+						
+					<li style="color: white;"><a href="apiGetFollower.jsp"
+						target="displayFrame"> Follower </a></li>
+						
+					<li style="color: white;"><a href="trend.jsp"
+						target="displayFrame"> Trends </a></li>
+						
+					<li style="color: white;"><a href="usertimeline.jsp"
+						target="displayFrame"> TimeLine </a></li>
+						
+					<li style="color: white;"><a href="Retweet.jsp"
+						target="displayFrame">ReTweet</a></li>
+						
+					<li style="color: white;"><a href="getGeo.jsp"
+						target="displayFrame"> Geo </a></li>
+						
+					<li style="color: white;"><a href="getUsers.jsp"
+						target="displayFrame">Users</a></li>
+				</ul>
+			</nav>
+			<article>
+				<h1>Result</h1>
+				<iframe name="displayFrame" style="height280px; width: 600px"></iframe>
+			</article>
+		</section>
+	
+		<footer>
+			<p>SanJose State University</p>
+			<p>Charles W. Davidson College of Engineering</p>
+			<p>Aye Swe, Chenghui Xue, Junia Ikeh, Rohan Patel, Zhonglin Liang</p>
+		</footer>	
+
+	</body>
+	</html>
+	
