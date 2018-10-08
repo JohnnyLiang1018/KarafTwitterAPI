@@ -281,6 +281,9 @@ public class ApiMain extends HttpServlet{
 		return null;
 	}
 	
+	public String getBearer() {
+		return bearer_key;
+	}
 	
 	
 	public static JSONObject inputStreamToJSON() throws IOException {
