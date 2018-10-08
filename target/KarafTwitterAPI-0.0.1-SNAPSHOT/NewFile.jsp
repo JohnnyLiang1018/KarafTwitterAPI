@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@ page  language="java"  import="twitter.ApiMain"  contentType="text/html; charset=UTF-8"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -8,6 +8,8 @@
 </head>
 <body>
 <h3>Hello World</h3>
-<%= new java.util.Date() %>
+<%! ApiMain api = new ApiMain(); %>
+<% api.application_only_auth(); %>
+<%=ApiMain.apiSearch("league%20of%20legends","popular") %>
 </body>
 </html>

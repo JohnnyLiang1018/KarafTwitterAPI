@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Retweet</title>
+<title>TrendClosestLocation</title>
 </head>
 <body>
-<h3>Retweet</h3>
+<h3>TrendClosestLocation</h3>
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiStatusesRetweets("1049120836387397632")%>
+<%=ApiMain.apiTrendClosest("37.781157","-122.400612831116")%> 
 </body>
 </html>

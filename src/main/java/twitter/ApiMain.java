@@ -11,7 +11,11 @@ import java.util.Base64;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServlet;
 import org.json.*;
-
+/**
+ * 
+ * @author Zhonglin Liang
+ *
+ */
 
 public class ApiMain extends HttpServlet{
 	private static URL url;
@@ -27,7 +31,7 @@ public class ApiMain extends HttpServlet{
 	public static void main(String []args) {
 		ApiMain api = new ApiMain();
 		api.application_only_auth();
-		apiGetFollower("lolesports");
+		apiTrendClosest("37.781157","-122.400612831116");
 	}
 	
 	public static void makeConnection(String urlString) {
@@ -100,8 +104,11 @@ public class ApiMain extends HttpServlet{
 				JSONArray array = json.getJSONArray("statuses"); // there are multiple tweets under statuses tab
 				String output = "";
 				for(int i=0;i<array.length();i++) { // loop through all the tweets, print the text string if available
-					output = output + array.getJSONObject(i).optString("text")+"<br>";
-					//System.out.println(array.getJSONObject(i).optString("text")+"\n");
+					output = output + "Tweet_id:" + array.getJSONObject(i).optString("id_str") + "<br>";
+					output = output + "User:" + array.getJSONObject(i).getJSONObject("user").optString("name") + "<br>";
+					output = output + "Text:" + array.getJSONObject(i).optString("text")+"<br>";
+					
+					System.out.println(array.getJSONObject(i).optString("id_str")+"\n");
 				}
 				return output;
 			}
@@ -127,9 +134,11 @@ public class ApiMain extends HttpServlet{
 				JSONObject json = inputStreamToJSON();
 				JSONArray array = json.getJSONArray("ids");
 				String output = "";
-				for(int i = 0; i<15; i++) {
+				for(int i = 0; i<50; i++) {
+					output = output + array.optString(i) + ",";
 					System.out.println(array.optString(i) + "\n");
 				}
+				return output;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -146,11 +155,14 @@ public class ApiMain extends HttpServlet{
 			connection.setRequestProperty("Authorization", "Bearer" + " " + bearer_key);
 			connection.connect();
 			if(connection.getResponseMessage().equals("OK")) {
-				JSONObject json = inputStreamToJSON();
+				JSONObject json = inputStreamToJSONV2();
 				JSONArray array = json.getJSONArray("trends");
+				String output = "";
 				for(int i = 0; i<array.length(); i++) {
+					output = output + array.getJSONObject(i).optString("name") + "<br>";
 					System.out.println(array.getJSONObject(i).optString("name"));
 				}
+				return output;
 			}
 			
 		} catch (IOException e) {
@@ -160,14 +172,57 @@ public class ApiMain extends HttpServlet{
 		return null;
 	}
 	
-	public static String apiGetGeo() {
-		
+	public static String apiTrendClosest(String lat, String lon) {
+		try {
+			makeConnection("https://api.twitter.com/1.1/trends/closest.json?lat=" + lat + "&" + "long=" + lon);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Authorization", "Bearer" + " " + bearer_key);
+			connection.connect();
+			if(connection.getResponseMessage().equals("OK")) {
+				JSONArray json = inputStreamToJSONArray();
+				String output = "";
+				for(int i = 0; i<json.length(); i++) {
+					output = output + "Country:" + json.getJSONObject(i).optString("country") + "<br>";
+					output = output + "Name:" + json.getJSONObject(i).optString("name") + "<br>"; 
+					output = output + "WOEID:" + json.getJSONObject(i).optString("woeid") + "<br>";
+					
+				}
+				return output;
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
-	public static String apiGetUsers() {
-		
+	public static String apiGetUsers(String idList) {
+		try {
+			makeConnection("https://api.twitter.com/1.1/users/lookup.json?user_id=" + idList);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Authorization", "Bearer" + " " + bearer_key);
+			connection.connect();
+			if(connection.getResponseMessage().equals("OK")) {
+				JSONArray json = inputStreamToJSONArray();
+				String output = "";
+				for(int i = 0; i<json.length(); i++) {
+					output = output + json.getJSONObject(i).optString("name") + "<br>";
+				}
+				return output;
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
+	}
+	
+	public static String apiGetFollowerName(String name) {
+		String input = apiGetFollower(name);
+		return apiGetUsers(input);
+	
 	}
 
 
@@ -176,20 +231,17 @@ public class ApiMain extends HttpServlet{
 	 * @param name
 	 * @return
 	 */
-	public String apiGetUserTimeline(String name, String number) {
+	public static String apiGetUserTimeline(String name, String count) {
 		String output = "";
 		try {
-			makeConnection("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + name+ "&count=" + number);
+			makeConnection("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + name+ "&count=" + count);
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("Authorization", "Bearer" + " " + bearer_key);
 			connection.connect();
 			if(connection.getResponseMessage().equals("OK")) {
-				JSONObject json = inputStreamToJSON();
-				JSONArray array = new JSONArray(json);
-				for(int i = 0; i<array.length(); i++) {
-					JSONObject dataObj = (JSONObject) array.get(i);
-					//output = dataObj.getString("text");
-					output = output + dataObj.toString();
+				JSONArray json = inputStreamToJSONArray();
+				for(int i = 0; i<json.length(); i++) {
+					output = output + "Text:" + json.getJSONObject(i).optString("text") + "<br>";
 				}
 			}
 			else {
@@ -203,14 +255,32 @@ public class ApiMain extends HttpServlet{
 		return output;
 	}
 	
-	public static String apiStatusesRetweets() {
+	public static String apiStatusesRetweets(String tweetId) {
+		try {
+			makeConnection("https://api.twitter.com/1.1/statuses/retweets/" + tweetId + ".json");
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Authorization", "Bearer" + " " + bearer_key);
+			connection.connect();
+			if(connection.getResponseMessage().equals("OK")) {
+				JSONArray json = inputStreamToJSONArray();
+				String output = "";
+				for(int i = 0; i<json.length(); i++) {
+					output = output + "created_at:" + json.getJSONObject(i).optString("created_at") + "<br>";
+				}
+				return output;
+			}
+			else {
+				System.out.println(connection.getResponseMessage());
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
 	
-	public static String test() {
-		return "TESTING";
-	}
 	
 	
 	public static JSONObject inputStreamToJSON() throws IOException {
@@ -228,6 +298,35 @@ public class ApiMain extends HttpServlet{
 		return output;
 	}
 	
+	public static JSONObject inputStreamToJSONV2() throws IOException{
+		InputStream is = connection.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String line;
+		StringBuffer jsonLines = new StringBuffer();
+		br.skip(1);
+		while ((line = br.readLine()) != null) {
+			jsonLines.append(line);
+			System.out.println(line);
+		}
+		br.close();
+		JSONObject output = new JSONObject(jsonLines.toString());
+		
+		return output;
+	}
 	
+	public static JSONArray inputStreamToJSONArray() throws IOException{
+		InputStream is = connection.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String line;
+		StringBuffer jsonLines = new StringBuffer();
+		while ((line = br.readLine()) != null) {
+			jsonLines.append(line);
+			System.out.println(line);
+		}
+		br.close();
+		JSONArray output = new JSONArray(jsonLines.toString());
+		
+		return output;
+	}
 	
 }

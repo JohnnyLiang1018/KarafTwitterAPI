@@ -10,6 +10,6 @@
 <h3>Followers</h3>
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiGetFollower("lolesports") %>
+<%=ApiMain.apiGetFollowerName("lolesports") %>
 </body>
 </html>

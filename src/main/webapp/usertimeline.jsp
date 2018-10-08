@@ -8,9 +8,8 @@
 </head>
 <body>
 <h3>Followers</h3>
-<% ApiMain api = new ApiMain();
-   api.application_only_auth();
-   api.apiGetUserTimeline("NASA", "2");
-%>
+<%! ApiMain api = new ApiMain(); %>
+<% api.application_only_auth(); %>
+<%=ApiMain.apiGetUserTimeline("lolesports","3") %>
 </body>
 </html>

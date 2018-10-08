@@ -10,6 +10,6 @@
 <h3>Users</h3>
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiGetUsers()%>
+<%=ApiMain.apiGetFollowerName("lolesports")%>
 </body>
 </html>
