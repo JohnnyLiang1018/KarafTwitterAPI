@@ -7,9 +7,18 @@
 <title>Users</title>
 </head>
 <body>
-<h3>Users</h3>
+<%!
+	String userName = ""; 
+	%>
+
+	<% userName = request.getParameter("user_name");%>
+	<h3>
+		Search result by User Name
+		<%=userName %>
+		</h3>
+
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiGetFollowerName("lolesports")%>
+<%=ApiMain.apiGetFollowerName(userName)%>
 </body>
 </html>

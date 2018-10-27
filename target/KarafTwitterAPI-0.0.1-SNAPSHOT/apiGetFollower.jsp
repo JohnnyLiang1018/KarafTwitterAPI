@@ -7,9 +7,21 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>Followers</h3>
+	<%!
+	String name = ""; 
+	%>
+
+	<% name = request.getParameter("follower_name");%>
+	
+	<h3>
+		Search result by follower name
+		<%=name %>
+		
+	</h3>
+
+
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiGetFollowerName("lolesports") %>
+<%=ApiMain.apiGetFollowerName(name) %>
 </body>
 </html>

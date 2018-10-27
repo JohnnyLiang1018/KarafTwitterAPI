@@ -7,9 +7,28 @@
 <title>TrendClosestLocation</title>
 </head>
 <body>
-<h3>TrendClosestLocation</h3>
+
+<%! String lat = "" ;
+	String lon ="";
+%>
+
+<% 
+	lat = request.getParameter("Lat"); 
+	lon = request.getParameter("Lon");
+
+%>
+
+<h3>Trend Closest Location at 
+<br/>
+Latitude: <%= lat %> </h3>
+<br/>
+
+	Longitude: <%=lon %>
+
+
+
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiTrendClosest("37.781157","-122.400612831116")%> 
+<%=ApiMain.apiTrendClosest(lat,lon)%> 
 </body>
 </html>

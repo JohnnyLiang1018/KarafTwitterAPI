@@ -7,9 +7,20 @@
 <title>Retweet</title>
 </head>
 <body>
-<h3>Retweet</h3>
+	<%!
+	String id = ""; 
+	%>
+
+	<% id = request.getParameter("tweet_id");%>
+	
+
+	<h3>
+		Search result by twitter ID
+		<%=id %>
+		
+	</h3>
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiStatusesRetweets("1049120836387397632")%>
+<%=ApiMain.apiStatusesRetweets(id)%>
 </body>
 </html>

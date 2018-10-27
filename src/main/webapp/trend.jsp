@@ -7,9 +7,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>Trends Search</h3>
+
+<%!String trendID=""; %>
+<% trendID = request.getParameter("trend_id"); %>
+
+
+<h3>Trends Search by ID <%=trendID%> </h3>
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiGetTrends("1") %>
+<%=ApiMain.apiGetTrends(trendID) %>
 </body>
 </html>

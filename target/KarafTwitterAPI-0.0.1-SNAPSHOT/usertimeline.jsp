@@ -7,9 +7,21 @@
 <title>User Time Line</title>
 </head>
 <body>
-<h3>Followers</h3>
+
+<%! String name = "";
+	String count ="";
+%>
+
+<% name =request.getParameter("user_name"); %>
+<% count =request.getParameter("count"); %>
+
+
+
+<h3>User time line with user name: <%=name%> <br/>
+	Number of time line: <%=count%> <br/>
+ </h3>
 <%! ApiMain api = new ApiMain(); %>
 <% api.application_only_auth(); %>
-<%=ApiMain.apiGetUserTimeline("lolesports","3") %>
+<%=ApiMain.apiGetUserTimeline(name,count) %>
 </body>
 </html>
