@@ -1,5 +1,6 @@
 Get User and Get Follower are calling the same function. We integrated two api call into one function that return a list of a username parameter's followers'names.
 Please use following Parameter for testing
+
 :Search 
 lolesports,popular
 
